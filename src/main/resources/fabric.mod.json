@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "rptweaks",
+  "version": "${version}",
+  "name": "Resource Pack Tweaks",
+  "description": "",
+  "authors": [],
+  "contact": {
+    "repo": "https://github.com/Theo/rptweaks"
+  },
+  "license": "MIT",
+  "icon": "assets/rptweaks/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "dev.drtheo.rptweaks.RPTweaks"
+    ],
+    "modmenu": [
+      "dev.drtheo.rptweaks.modmenu.RPTweaksMenu"
+    ]
+  },
+  "mixins": [
+    "rptweaks.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": ">=${minecraft_version}",
+    "cloth-config": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/CvSkNeQ9uj"
+      }
+    }
+  }
+}
