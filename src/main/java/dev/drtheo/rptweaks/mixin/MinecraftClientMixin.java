@@ -7,7 +7,7 @@ import net.minecraft.client.RunArgs;
 import net.minecraft.client.resource.ClientBuiltinResourcePackProvider;
 import net.minecraft.resource.*;
 import net.minecraft.resource.metadata.PackResourceMetadata;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,7 +52,7 @@ public abstract class MinecraftClientMixin {
             RPTweaks.LOGGER.info("Applying server pack {}", packZip);
             ((ClientBuiltinResourcePackProviderAccessor) this.builtinPackProvider).setServerContainer(
                     new ResourcePackProfile("server", true,
-                            () -> pack, new TranslatableText("resourcePack.server.name"),
+                            () -> pack, Text.translatable("resourcePack.server.name"),
                             metadata.getDescription(), ResourcePackCompatibility.from(metadata, ResourceType.CLIENT_RESOURCES),
                             ResourcePackProfile.InsertionPosition.TOP, true, ResourcePackSource.PACK_SOURCE_SERVER
                     )

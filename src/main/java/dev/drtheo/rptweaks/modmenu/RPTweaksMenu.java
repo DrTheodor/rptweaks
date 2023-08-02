@@ -7,7 +7,6 @@ import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 public class RPTweaksMenu implements ModMenuApi {
 
@@ -28,8 +27,6 @@ public class RPTweaksMenu implements ModMenuApi {
         );
 
         return parent -> ConfigBuilder.create()
-                .setParentScreen(parent).setTitle(
-                        new TranslatableText("title.examplemod.config")
-                ).build();
+                .setParentScreen(parent).build();
     }
 }
