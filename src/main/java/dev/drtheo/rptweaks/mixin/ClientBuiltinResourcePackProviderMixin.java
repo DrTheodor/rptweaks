@@ -17,11 +17,11 @@ public class ClientBuiltinResourcePackProviderMixin {
 
     // stop server resourcepack from de-loading
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
-    public void clear(CallbackInfo ci) {
-        ci.cancel();
+    public void clear(CallbackInfoReturnable<CompletableFuture<?>> cir) {
+        cir.setReturnValue(null);
     }
 
-    @Inject(method = "loadServerPack", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "loadServerPack(Ljava/io/File;Lnet/minecraft/resource/ResourcePackSource;)Ljava/util/concurrent/CompletableFuture;", at = @At("HEAD"), cancellable = true)
     public void loadServerPack(File packZip, ResourcePackSource packSource, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         Config config = Config.getConfig();
         if (config.isLatest(packZip))
