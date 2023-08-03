@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -26,6 +27,9 @@ public class ClientBuiltinResourcePackProviderMixin {
     @Shadow @Nullable private ResourcePackProfile serverContainer;
 
     @Shadow @Final private static String SERVER;
+
+    @Unique
+    private boolean allowLoad = false;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     public void init(File serverPacksRoot, ResourceIndex index, CallbackInfo ci) {
@@ -53,7 +57,10 @@ public class ClientBuiltinResourcePackProviderMixin {
     // stop server resourcepack from de-loading
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
     public void clear(CallbackInfoReturnable<CompletableFuture<?>> cir) {
-        cir.setReturnValue(null);
+        if (this.allowLoad) {
+            cir.setReturnValue(null);
+            this.allowLoad = false;
+        }
     }
 
     @Inject(method = "loadServerPack(Ljava/io/File;Lnet/minecraft/resource/ResourcePackSource;)Ljava/util/concurrent/CompletableFuture;", at = @At("HEAD"), cancellable = true)
@@ -63,5 +70,6 @@ public class ClientBuiltinResourcePackProviderMixin {
             cir.setReturnValue(null);
 
         config.setLatest(packZip);
+        this.allowLoad = true;
     }
 }
