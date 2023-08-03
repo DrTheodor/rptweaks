@@ -19,7 +19,10 @@ If true, makes Minecraft load the latest pack before launch.
 preload: (true|false)
 """;
 
-    private static final Path file = FabricLoader.getInstance().getConfigDir()
+    private final Path serverResourcePacksFolder = FabricLoader.getInstance()
+            .getGameDir().resolve("server-resource-packs");
+
+    private final Path file = FabricLoader.getInstance().getConfigDir()
             .resolve("rptweaks.properties");
 
     private final Properties properties = new Properties();
@@ -28,7 +31,7 @@ preload: (true|false)
     private boolean preload = true;
 
     public Config() {
-        if (!Files.exists(file)) {
+        if (!Files.exists(this.file)) {
             this.save();
         }
 
@@ -36,13 +39,13 @@ preload: (true|false)
     }
 
     public void load() {
-        try (InputStream stream = Files.newInputStream(file)) {
+        try (InputStream stream = Files.newInputStream(this.file)) {
             this.properties.load(stream);
 
             String latest = this.properties.getProperty("latest");
 
             if (latest != null) {
-                this.latest = new File(latest);
+                this.latest = serverResourcePacksFolder.resolve(latest).toFile();
 
                 if (!this.latest.exists()) {
                     this.latest = null;
@@ -58,9 +61,9 @@ preload: (true|false)
     }
 
     public void save() {
-        try (OutputStream stream = Files.newOutputStream(file)) {
+        try (OutputStream stream = Files.newOutputStream(this.file)) {
             if (this.latest != null) {
-                this.properties.setProperty("latest", this.latest.getAbsolutePath());
+                this.properties.setProperty("latest", this.latest.getName());
             }
 
             this.properties.setProperty("preload", String.valueOf(this.preload));
@@ -79,7 +82,7 @@ preload: (true|false)
     }
 
     public boolean isLatest(File file) {
-        return this.latest.equals(file);
+        return this.latest != null && this.latest.equals(file);
     }
 
     public boolean shouldPreload() {

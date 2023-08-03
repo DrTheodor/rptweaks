@@ -26,7 +26,6 @@ public class RPTweaksMenu implements ModMenuApi {
                 ).setSaveConsumer(config::shouldPreload).setDefaultValue(true).build()
         );
 
-        return parent -> ConfigBuilder.create()
-                .setParentScreen(parent).build();
+        return parent -> ConfigBuilder.create().build();
     }
 }
