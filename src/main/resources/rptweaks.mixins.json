@@ -4,9 +4,7 @@
   "package": "dev.drtheo.rptweaks.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "ClientBuiltinResourcePackProviderAccessor",
-    "ClientBuiltinResourcePackProviderMixin",
-    "MinecraftClientMixin"
+    "ClientBuiltinResourcePackProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
