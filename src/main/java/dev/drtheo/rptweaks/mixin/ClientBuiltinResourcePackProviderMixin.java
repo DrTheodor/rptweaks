@@ -58,8 +58,8 @@ public class ClientBuiltinResourcePackProviderMixin {
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
     public void clear(CallbackInfoReturnable<CompletableFuture<?>> cir) {
         if (this.allowLoad) {
-            cir.setReturnValue(null);
             this.allowLoad = false;
+            cir.setReturnValue(null);
         }
     }
 
@@ -67,7 +67,7 @@ public class ClientBuiltinResourcePackProviderMixin {
     public void loadServerPack(File packZip, ResourcePackSource packSource, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         Config config = Config.getConfig();
         if (config.isLatest(packZip))
-            cir.setReturnValue(null);
+            cir.setReturnValue(CompletableFuture.completedFuture(null));
 
         config.setLatest(packZip);
         this.allowLoad = true;
