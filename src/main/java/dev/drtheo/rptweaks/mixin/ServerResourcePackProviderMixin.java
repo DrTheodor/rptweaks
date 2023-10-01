@@ -42,7 +42,7 @@ public class ServerResourcePackProviderMixin {
                 RPTweaks.LOGGER.error("Invalid pack metadata at " + packZip);
             } else {
                 RPTweaks.LOGGER.info("Applying server pack {}", packZip);
-                this.serverContainer = ResourcePackProfile.of("server", SERVER_NAME_TEXT, true, packFactory, metadata, ResourceType.CLIENT_RESOURCES, ResourcePackProfile.InsertionPosition.TOP, true, ResourcePackSource.SERVER);
+                this.serverContainer = ResourcePackProfile.of("server", SERVER_NAME_TEXT, true, packFactory, metadata, ResourceType.CLIENT_RESOURCES, ResourcePackProfile.InsertionPosition.TOP, false, ResourcePackSource.SERVER);
             }
         }
     }
