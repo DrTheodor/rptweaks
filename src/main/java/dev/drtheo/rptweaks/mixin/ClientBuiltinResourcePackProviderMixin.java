@@ -46,7 +46,7 @@ public class ClientBuiltinResourcePackProviderMixin {
                         SERVER, true, () -> new ZipResourcePack(packZip),
                         Text.translatable("resourcePack.server.name"), metadata.getDescription(),
                         ResourcePackCompatibility.from(metadata, ResourceType.CLIENT_RESOURCES),
-                        ResourcePackProfile.InsertionPosition.TOP, true, ResourcePackSource.PACK_SOURCE_SERVER
+                        ResourcePackProfile.InsertionPosition.TOP, false, ResourcePackSource.PACK_SOURCE_SERVER
                 );
             } catch (IOException exception) {
                 RPTweaks.LOGGER.error("Invalid pack metadata at " + packZip);
