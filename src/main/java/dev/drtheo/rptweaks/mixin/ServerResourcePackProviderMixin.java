@@ -2,6 +2,7 @@ package dev.drtheo.rptweaks.mixin;
 
 import dev.drtheo.rptweaks.RPTweaks;
 import dev.drtheo.rptweaks.config.Config;
+import net.minecraft.SharedConstants;
 import net.minecraft.client.resource.ServerResourcePackProvider;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
@@ -35,14 +36,21 @@ public class ServerResourcePackProviderMixin {
         File packZip = config.getLatest();
 
         if (config.shouldPreload() && config.getLatest() != null) {
-            ResourcePackProfile.PackFactory packFactory = (name) -> new ZipResourcePack(name, packZip, false);
-            ResourcePackProfile.Metadata metadata = ResourcePackProfile.loadMetadata("server", packFactory);
+            ResourcePackProfile.PackFactory packFactory = new ZipResourcePack.ZipBackedFactory(packZip, false);
+            int version = SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES);
+
+            ResourcePackProfile.Metadata metadata = ResourcePackProfile.loadMetadata("server", packFactory, version);
 
             if (metadata == null) {
                 RPTweaks.LOGGER.error("Invalid pack metadata at " + packZip);
             } else {
                 RPTweaks.LOGGER.info("Applying server pack {}", packZip);
-                this.serverContainer = ResourcePackProfile.of("server", SERVER_NAME_TEXT, true, packFactory, metadata, ResourceType.CLIENT_RESOURCES, ResourcePackProfile.InsertionPosition.TOP, false, ResourcePackSource.SERVER);
+
+                this.serverContainer = ResourcePackProfile.of(
+                        "server", SERVER_NAME_TEXT, true, packFactory,
+                        metadata, ResourcePackProfile.InsertionPosition.TOP, false,
+                        ResourcePackSource.SERVER
+                );
             }
         }
     }
