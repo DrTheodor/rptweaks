@@ -22,6 +22,7 @@
   "mixins": [
     "rptweaks.mixins.json"
   ],
+  "accessWidener": "rptweaks.accesswidener",
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-api": "*",

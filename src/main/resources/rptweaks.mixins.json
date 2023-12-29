@@ -4,7 +4,10 @@
   "package": "dev.drtheo.rptweaks.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "ServerResourcePackProviderMixin"
+    "PackEntryAcessor",
+    "ServerResourcePackLoaderAccessor",
+    "ServerResourcePackLoaderMixin",
+    "ServerResourcePackManagerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

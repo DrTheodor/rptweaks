@@ -1,14 +1,14 @@
 package dev.drtheo.rptweaks.config;
 
+import dev.drtheo.rptweaks.RPTweaks;
 import net.fabricmc.loader.api.FabricLoader;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Properties;
+import java.util.*;
 
 public class Config {
 
@@ -19,15 +19,12 @@ If true, makes Minecraft load the latest pack before launch.
 preload: (true|false)
 """;
 
-    private final Path serverResourcePacksFolder = FabricLoader.getInstance()
-            .getGameDir().resolve("server-resource-packs");
-
     private final Path file = FabricLoader.getInstance().getConfigDir()
-            .resolve("rptweaks.properties");
+            .resolve("rptweaks-v2.properties");
 
     private final Properties properties = new Properties();
 
-    private File latest = null;
+    private List<PackEntry> latest = new ArrayList<>();
     private boolean preload = true;
 
     public Config() {
@@ -45,10 +42,16 @@ preload: (true|false)
             String latest = this.properties.getProperty("latest");
 
             if (latest != null) {
-                this.latest = serverResourcePacksFolder.resolve(latest).toFile();
+                this.latest.clear();
+                String[] files = latest.split(";");
+                RPTweaks.LOGGER.info("FILES: " + Arrays.toString(files));
 
-                if (!this.latest.exists()) {
-                    this.latest = null;
+                for (String file : files) {
+                    PackEntry entry = PackEntry.fromString(file);
+                    RPTweaks.LOGGER.info("DECODED ENTRY: " + entry);
+
+                    if (entry != null)
+                        this.latest.add(entry);
                 }
             }
 
@@ -63,7 +66,13 @@ preload: (true|false)
     public void save() {
         try (OutputStream stream = Files.newOutputStream(this.file)) {
             if (this.latest != null) {
-                this.properties.setProperty("latest", this.latest.getName());
+                List<String> paths = new ArrayList<>();
+
+                for (PackEntry entry : this.latest) {
+                    paths.add(entry.asString());
+                }
+
+                this.properties.setProperty("latest", String.join(";", paths));
             }
 
             this.properties.setProperty("preload", String.valueOf(this.preload));
@@ -73,16 +82,24 @@ preload: (true|false)
         }
     }
 
-    public File getLatest() {
+    public List<PackEntry> getLatest() {
         return latest;
     }
 
-    public void setLatest(File latest) {
+    public void setLatest(List<PackEntry> latest) {
         this.latest = latest;
     }
 
-    public boolean isLatest(File file) {
-        return this.latest != null && this.latest.equals(file);
+    public boolean isLatest(Path path) {
+        if (this.latest.isEmpty())
+            return false;
+
+        for (PackEntry entry : this.latest) {
+            if (entry.path().equals(path))
+                return true;
+        }
+
+        return false;
     }
 
     public boolean shouldPreload() {

@@ -29,6 +29,10 @@ dependencies {
     }
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/rptweaks.accesswidener")
+}
+
 processResources {
     inputs.property "version", project.version
     inputs.property "minecraft_version", project.minecraft_version
