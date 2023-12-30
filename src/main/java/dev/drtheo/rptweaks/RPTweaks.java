@@ -7,6 +7,7 @@ import dev.drtheo.rptweaks.mixin.ServerResourcePackLoaderAccessor;
 import dev.drtheo.rptweaks.mixin.ServerResourcePackManagerAccessor;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.resource.server.ServerResourcePackLoader;
 import net.minecraft.client.resource.server.ServerResourcePackManager;
 import org.slf4j.Logger;
@@ -28,22 +29,24 @@ public class RPTweaks implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-            ServerResourcePackManager manager = loader.getManager();
-            List<PackEntry> packs = ((ServerResourcePackManagerAccessor) manager).getPacks().stream()
-                    .map(packEntry -> {
-                        PackEntryAcessor accessor = (PackEntryAcessor) packEntry;
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            new Thread(() -> {
+                ServerResourcePackManager manager = loader.getManager();
+                List<PackEntry> packs = ((ServerResourcePackManagerAccessor) manager).getPacks().stream()
+                        .map(packEntry -> {
+                            PackEntryAcessor accessor = (PackEntryAcessor) packEntry;
 
-                        Path path = accessor.getPath() == null ? Path.of(accessor.getUrl().getPath())
-                                : accessor.getPath();
-                        UUID uuid = accessor.getId();
+                            Path path = accessor.getPath() == null ? Path.of(accessor.getUrl().getPath())
+                                    : accessor.getPath();
+                            UUID uuid = accessor.getId();
 
-                        return new PackEntry(path, uuid);
-                    })
-                    .toList();
+                            return new PackEntry(path, uuid);
+                        })
+                        .toList();
 
-            Config.getConfig().setLatest(packs);
-            Config.getConfig().save();
+                Config.getConfig().setLatest(packs);
+                Config.getConfig().save();
+            }).start();
         });
 
         Config config = Config.getConfig();

@@ -94,8 +94,9 @@ preload: (true|false)
         if (this.latest.isEmpty())
             return false;
 
+        path = path.toAbsolutePath();
         for (PackEntry entry : this.latest) {
-            if (entry.path().equals(path))
+            if (entry.path().toAbsolutePath().equals(path))
                 return true;
         }
 

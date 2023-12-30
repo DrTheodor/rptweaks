@@ -5,6 +5,7 @@ import dev.drtheo.rptweaks.config.Config;
 import dev.drtheo.rptweaks.mixininterface.PackProviderSetter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
+import net.minecraft.client.resource.server.ReloadScheduler;
 import net.minecraft.client.resource.server.ServerResourcePackLoader;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackProvider;
@@ -35,8 +36,15 @@ public abstract class ServerResourcePackLoaderMixin implements PackProviderSette
     // stop server resourcepack from de-loading
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
     public void clear(CallbackInfo ci) {
+        ci.cancel();
+    }
+
+    @Inject(method = "reload", at = @At("HEAD"), cancellable = true)
+    public void reload(ReloadScheduler.ReloadContext context, CallbackInfo ci) {
         if (this.allowLoad) {
             this.allowLoad = false;
+
+            context.onSuccess();
             ci.cancel();
         }
     }
