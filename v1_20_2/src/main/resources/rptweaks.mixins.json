@@ -4,10 +4,8 @@
   "package": "dev.drtheo.rptweaks.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
-    "PackEntryAcessor",
-    "ServerResourcePackLoaderAccessor",
-    "ServerResourcePackLoaderMixin",
-    "ServerResourcePackManagerAccessor",
+    "ServerResourcePackProviderAccessor",
+    "ServerResourcePackProviderMixin",
     "impl.MinecraftClientMixin",
     "impl.ServerInfoMixin"
   ],

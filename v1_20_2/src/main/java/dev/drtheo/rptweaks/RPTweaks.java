@@ -13,7 +13,7 @@ import java.nio.file.Path;
 public class RPTweaks extends TweaksMod implements ClientModInitializer {
 
     public RPTweaks() {
-        super("downloads", RPConfig::new, PackStateObserver::new);
+        super("server-resource-packs", RPConfig::new, PackStateObserver::new);
     }
 
     @Override
