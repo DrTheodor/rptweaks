@@ -1,16 +1,14 @@
 package dev.drtheo.rptweaks.resource;
 
 import dev.drtheo.rptweaks.TweaksMod;
-import dev.drtheo.rptweaks.config.PackEntry;
+import dev.drtheo.rptweaks.config.entry.PackEntry;
 import dev.drtheo.rptweaks.mixin.ServerResourcePackProviderAccessor;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.class_310;
 
 import java.util.Collection;
 import java.util.List;
 
 public class PackStateObserver extends AbstractPackStateObserver {
-
-    private final MinecraftClient client = MinecraftClient.getInstance();
 
     public PackStateObserver(TweaksMod mod) {
         super(mod);
@@ -19,9 +17,9 @@ public class PackStateObserver extends AbstractPackStateObserver {
     @Override
     public Collection<? extends PackEntry> active() {
         ServerResourcePackProviderAccessor accessor = (ServerResourcePackProviderAccessor)
-                client.getServerResourcePackProvider();
+                class_310.method_1551().method_1516();
 
-        String name = accessor.getServerContainer().getName();
+        String name = accessor.getServerPack().getId();
         return List.of(this.mod.config().entry(name));
     }
 }

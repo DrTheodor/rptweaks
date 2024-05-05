@@ -6,8 +6,8 @@
   "client": [
     "ServerResourcePackProviderAccessor",
     "ServerResourcePackProviderMixin",
-    "impl.MinecraftClientMixin",
-    "impl.ServerInfoMixin"
+    "impl.ServerInfoMixin",
+    "DisconnectHook"
   ],
   "injectors": {
     "defaultRequire": 1

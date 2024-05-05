@@ -1,7 +1,7 @@
 package dev.drtheo.rptweaks;
 
 import dev.drtheo.rptweaks.config.TweaksConfig;
-import dev.drtheo.rptweaks.config.entry.SimplePackEntry;
+import dev.drtheo.rptweaks.config.entry.AdvancedPackEntry;
 import dev.drtheo.rptweaks.resource.AbstractPackStateObserver;
 import dev.drtheo.rptweaks.resource.PackStateObserver;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,7 +11,7 @@ import java.nio.file.Path;
 public class RPTweaks extends TweaksMod {
 
     public RPTweaks() {
-        super("server-resource-packs");
+        super("downloads");
     }
 
     @Override
@@ -21,7 +21,7 @@ public class RPTweaks extends TweaksMod {
 
     @Override
     protected TweaksConfig createConfig() {
-        return new TweaksConfig("rptweaks.v1", this, SimplePackEntry::fromString);
+        return new TweaksConfig("rptweaks.v2", this, AdvancedPackEntry::fromString);
     }
 
     @Override
