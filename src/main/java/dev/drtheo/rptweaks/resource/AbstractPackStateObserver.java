@@ -4,8 +4,6 @@ import dev.drtheo.rptweaks.TweaksMod;
 import dev.drtheo.rptweaks.config.TweaksConfig;
 import dev.drtheo.rptweaks.mixininterface.ServerInfoLike;
 import dev.drtheo.rptweaks.config.entry.PackEntry;
-import net.minecraft.class_310;
-import net.minecraft.class_642;
 
 import java.util.Collection;
 
@@ -27,10 +25,11 @@ public abstract class AbstractPackStateObserver {
     public void onDisconnect() {
         this.allowReload = false;
 
-        TweaksConfig config = this.mod.config();
-        config.setLatest(this.active());
-
-        new Thread(config::save).start();
+        new Thread(() -> {
+            TweaksConfig config = this.mod.config();
+            config.setLatest(this.active());
+            config.save();
+        }).start();
     }
 
     public boolean shouldReload() {
@@ -66,6 +65,7 @@ public abstract class AbstractPackStateObserver {
     }
 
     public boolean sameServer(ServerInfoLike info) {
+        System.out.println("SAME?: " + (info == null ? null : info.rpt$address()) + " vs " + (this.lastServer == null ? null : this.lastServer.rpt$address()));
         if (this.lastServer == null)
             return false;
 
@@ -82,8 +82,5 @@ public abstract class AbstractPackStateObserver {
 
     public abstract Collection<? extends PackEntry> active();
 
-    private ServerInfoLike getCurrentServer() {
-        class_642 result = class_310.method_1551().method_1558();
-        return result != null ? (ServerInfoLike) result : null;
-    }
+    protected abstract ServerInfoLike getCurrentServer();
 }

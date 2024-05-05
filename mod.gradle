@@ -27,6 +27,13 @@ dependencies {
     common project(":")
 }
 
+remapJar {
+    // Set the source namespace, also valid for remapSourcesJar
+    sourceNamespace = "named"
+    // Set the target namespace, also valid for remapSourcesJar
+    targetNamespace = "intermediary"
+}
+
 jar {
     configurations.common.each { dep ->
         from(project.zipTree(dep)) {

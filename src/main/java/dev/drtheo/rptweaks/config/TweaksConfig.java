@@ -60,7 +60,7 @@ preload: (true|false)
             }
 
             this.preload = Boolean.parseBoolean(
-                    this.properties.getProperty("preload", "")
+                    this.properties.getProperty("preload", "true")
             );
 
             this.maxPacks = Integer.parseInt(
