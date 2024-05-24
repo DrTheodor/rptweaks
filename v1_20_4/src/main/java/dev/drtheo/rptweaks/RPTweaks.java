@@ -4,6 +4,7 @@ import dev.drtheo.rptweaks.config.TweaksConfig;
 import dev.drtheo.rptweaks.config.entry.AdvancedPackEntry;
 import dev.drtheo.rptweaks.resource.AbstractPackStateObserver;
 import dev.drtheo.rptweaks.resource.PackStateObserver;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.nio.file.Path;
@@ -12,6 +13,9 @@ public class RPTweaks extends TweaksMod {
 
     public RPTweaks() {
         super("downloads");
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client)
+                -> this.handleDisconnect());
     }
 
     @Override

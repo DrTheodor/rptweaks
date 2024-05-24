@@ -3,14 +3,13 @@ package dev.drtheo.rptweaks;
 import dev.drtheo.rptweaks.config.TweaksConfig;
 import dev.drtheo.rptweaks.entrypoint.EarlyClientModInitializer;
 import dev.drtheo.rptweaks.resource.AbstractPackStateObserver;
-import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 
-public abstract class TweaksMod implements EarlyClientModInitializer, ClientModInitializer {
+public abstract class TweaksMod implements EarlyClientModInitializer {
 
     public static Logger LOGGER = LoggerFactory.getLogger("rptweaks");
 
@@ -27,11 +26,6 @@ public abstract class TweaksMod implements EarlyClientModInitializer, ClientModI
 
         this.packs = this.getGameDir().resolve(packs);
         this.configs = this.getGameDir().resolve("config");
-    }
-
-    @Override
-    public void onInitializeClient() {
-
     }
 
     @Override

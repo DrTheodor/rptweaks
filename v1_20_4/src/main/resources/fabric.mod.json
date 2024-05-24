@@ -14,9 +14,6 @@
   "icon": "assets/rptweaks/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "dev.drtheo.rptweaks.RPTweaks"
-    ],
     "modmenu": [
       "dev.drtheo.rptweaks.menu.RPTweaksModMenu"
     ],

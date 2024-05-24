@@ -1,17 +1,17 @@
 package dev.drtheo.rptweaks.mixin.impl;
 
 import dev.drtheo.rptweaks.mixininterface.ServerInfoLike;
-import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.network.ServerInfo;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(ServerData.class)
+@Mixin(ServerInfo.class)
 public class ServerInfoMixin implements ServerInfoLike {
 
-    @Shadow public String ip;
+    @Shadow public String address;
 
     @Override
     public String rpt$address() {
-        return this.ip;
+        return this.address;
     }
 }

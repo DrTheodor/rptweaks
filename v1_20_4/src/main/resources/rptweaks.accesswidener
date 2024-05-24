@@ -1,7 +1,2 @@
 accessWidener v2 named
-accessible class net/minecraft/client/resources/server/ServerPackManager$ServerPackData
-#accessible class net/minecraft/client/resource/server/ServerResourcePackLoader$3
-
-#extendable method net/minecraft/client/resource/server/ServerResourcePackLoader reload (Lnet/minecraft/client/resource/server/ReloadScheduler$ReloadContext;)V
-#accessible field net/minecraft/client/resource/server/ServerResourcePackLoader client Lnet/minecraft/client/MinecraftClient;
-#accessible method net/minecraft/client/resource/server/ServerResourcePackLoader createListener (I)Lnet/minecraft/util/NetworkUtils$DownloadListener;
+accessible class net/minecraft/client/resource/server/ServerResourcePackManager$PackEntry

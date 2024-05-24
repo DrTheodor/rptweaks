@@ -1,14 +1,13 @@
 package dev.drtheo.rptweaks.mixin;
 
-import net.minecraft.client.resources.server.DownloadedPackSource;
-import net.minecraft.client.resources.server.ServerPackManager;
+import net.minecraft.client.resource.server.ServerResourcePackLoader;
+import net.minecraft.client.resource.server.ServerResourcePackManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(DownloadedPackSource.class)
+@Mixin(ServerResourcePackLoader.class)
 public interface ServerResourcePackLoaderAccessor {
 
     @Accessor
-    ServerPackManager getManager();
-
+    ServerResourcePackManager getManager();
 }

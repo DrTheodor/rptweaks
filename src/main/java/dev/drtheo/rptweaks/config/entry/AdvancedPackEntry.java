@@ -9,7 +9,7 @@ import java.util.UUID;
 public interface AdvancedPackEntry {
 
     static PackEntry fromString(TweaksMod mod, String entry) {
-        // 7ebfa78f-3a46-3ff5-97ab-525d4ffeaf95/a4bd2e849c14f3359a7a21910ad966e035077112
+        // e.g. 7ebfa78f-3a46-3ff5-97ab-525d4ffeaf95/a4bd2e849c14f3359a7a21910ad966e035077112
         Path path = mod.getPacksDir().resolve(entry);
 
         if (!Files.exists(path))

@@ -3,14 +3,14 @@ package dev.drtheo.rptweaks.mixin;
 import dev.drtheo.rptweaks.TweaksMod;
 import dev.drtheo.rptweaks.config.entry.PackEntry;
 import dev.drtheo.rptweaks.resource.AbstractPackStateObserver;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.main.GameConfig;
-import net.minecraft.client.resources.server.PackReloadConfig;
-import net.minecraft.client.resources.server.DownloadedPackSource;
-import net.minecraft.client.resources.server.ServerPackManager;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
+import net.minecraft.client.resource.server.ReloadScheduler;
+import net.minecraft.client.resource.server.ServerResourcePackLoader;
+import net.minecraft.client.resource.server.ServerResourcePackManager;
+import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,15 +23,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.nio.file.Path;
 import java.util.Collection;
 
-@Mixin(DownloadedPackSource.class)
+@Mixin(ServerResourcePackLoader.class)
 public abstract class ServerResourcePackLoaderMixin {
 
-    @Shadow @Final ServerPackManager manager;
+    @Shadow @Final ServerResourcePackManager manager;
 
     @Unique private static final TweaksMod mod = TweaksMod.get();
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void init(Minecraft client, Path downloadsDirectory, GameConfig.UserData runArgs, CallbackInfo ci) {
+    public void init(MinecraftClient client, Path downloadsDirectory, RunArgs.Network runArgs, CallbackInfo ci) {
         if (!mod.config().shouldPreload())
             return;
 
@@ -40,17 +40,17 @@ public abstract class ServerResourcePackLoaderMixin {
         if (entries.isEmpty())
             return;
 
-        this.manager.allowServerPacks();
+        this.manager.acceptAll();
         for (PackEntry entry : entries) {
-            this.manager.pushLocalPack(entry.uuid(), entry.path());
+            this.manager.addResourcePack(entry.uuid(), entry.path());
         }
 
         mod.observer().setInitializing(true);
         mod.observer().setPreloaded(true);
     }
 
-    @Inject(method = "startReload", at = @At("HEAD"), cancellable = true)
-    public void reload(PackReloadConfig.Callbacks context, CallbackInfo ci) {
+    @Inject(method = "reload", at = @At("HEAD"), cancellable = true)
+    public void reload(ReloadScheduler.ReloadContext context, CallbackInfo ci) {
         AbstractPackStateObserver observer = mod.observer();
         boolean result = observer.shouldReload();
 
@@ -60,7 +60,7 @@ public abstract class ServerResourcePackLoaderMixin {
         }
     }
 
-    @Inject(method = "cleanupAfterDisconnect", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
     public void clear(CallbackInfo ci) {
         if (mod.observer().shouldClear())
             ci.cancel();
@@ -71,8 +71,8 @@ public abstract class ServerResourcePackLoaderMixin {
         mod.observer().onFinish();
     }
 
-    @Redirect(method = "loadRequestedPacks", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/repository/Pack;create(Ljava/lang/String;Lnet/minecraft/network/chat/Component;ZLnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/server/packs/repository/Pack$Info;Lnet/minecraft/server/packs/repository/Pack$Position;ZLnet/minecraft/server/packs/repository/PackSource;)Lnet/minecraft/server/packs/repository/Pack;"))
-    public Pack createProfile(String id, Component title, boolean required, Pack.ResourcesSupplier resources, Pack.Info info, Pack.Position defaultPosition, boolean fixedPosition, PackSource packSource) {
-        return Pack.create(id, title, required, resources, info, defaultPosition, false, packSource);
+    @Redirect(method = "toProfiles", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourcePackProfile;of(Ljava/lang/String;Lnet/minecraft/text/Text;ZLnet/minecraft/resource/ResourcePackProfile$PackFactory;Lnet/minecraft/resource/ResourcePackProfile$Metadata;Lnet/minecraft/resource/ResourcePackProfile$InsertionPosition;ZLnet/minecraft/resource/ResourcePackSource;)Lnet/minecraft/resource/ResourcePackProfile;"))
+    public ResourcePackProfile createProfile(String id, Text title, boolean required, ResourcePackProfile.PackFactory factory, ResourcePackProfile.Metadata metadata, ResourcePackProfile.InsertionPosition insertionPosition, boolean pinned, ResourcePackSource packSource) {
+        return ResourcePackProfile.of(id, title, required, factory, metadata, insertionPosition, false, packSource);
     }
 }
