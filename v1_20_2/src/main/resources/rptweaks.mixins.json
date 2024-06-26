@@ -6,8 +6,7 @@
   "client": [
     "ServerResourcePackProviderAccessor",
     "ServerResourcePackProviderMixin",
-    "impl.ServerInfoMixin",
-    "DisconnectHook"
+    "impl.ServerInfoMixin"
   ],
   "injectors": {
     "defaultRequire": 1
